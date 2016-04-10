@@ -56,33 +56,7 @@ class GameScene: SKScene {
         moveSprite(zombie1, velocity: velocity)
         
     }
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        /*
-        /* Called when a touch begins */
-        
-        for touch in touches {
-            let location = touch.locationInNode(self)
-            
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
-            
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            
-            sprite.runAction(SKAction.repeatActionForever(action))
-            
-            self.addChild(sprite)
-        }
-         */
-        guard let touch = touches.first else {
-            return
-        }
-        let touchLocation = touch.locationInNode(self)
-        sceneTouched(touchLocation)
-    }
+
    
     override func update(currentTime: CFTimeInterval) {
         
@@ -97,6 +71,7 @@ class GameScene: SKScene {
         //moveSprite(zombie1, velocity: CGPoint(x: zombieMovePointsPerSec!, y: 0))
         
         moveSprite(zombie1, velocity: velocity)
+        boundsCheckZombie()
         
     }
     
@@ -133,6 +108,34 @@ class GameScene: SKScene {
         moveZombieToward(zombie1, location:touchLocation)
     }
 
+    
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        /*
+         /* Called when a touch begins */
+         
+         for touch in touches {
+         let location = touch.locationInNode(self)
+         
+         let sprite = SKSpriteNode(imageNamed:"Spaceship")
+         
+         sprite.xScale = 0.5
+         sprite.yScale = 0.5
+         sprite.position = location
+         
+         let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+         
+         sprite.runAction(SKAction.repeatActionForever(action))
+         
+         self.addChild(sprite)
+         }
+         */
+        guard let touch = touches.first else {
+            return
+        }
+        let touchLocation = touch.locationInNode(self)
+        sceneTouched(touchLocation)
+    }
 
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         guard let touch = touches.first else {
@@ -140,6 +143,28 @@ class GameScene: SKScene {
         }
         let touchLocation = touch.locationInNode(self)
         sceneTouched(touchLocation)
+    }
+    
+    
+    func boundsCheckZombie() {
+        let bottomLeft = CGPointZero
+        let topRight = CGPoint(x: size.width, y: size.height)
+        if zombie1.position.x <= bottomLeft.x {
+            zombie1.position.x = bottomLeft.x
+            velocity.x = -velocity.x
+        }
+        if zombie1.position.x >= topRight.x {
+            zombie1.position.x = topRight.x
+            velocity.x = -velocity.x
+        }
+        if zombie1.position.y <= bottomLeft.y {
+            zombie1.position.y = bottomLeft.y
+            velocity.y = -velocity.y
+        }
+        if zombie1.position.y >= topRight.y {
+            zombie1.position.y = topRight.y
+            velocity.y = -velocity.y
+        }
     }
 }
 
